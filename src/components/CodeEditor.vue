@@ -1,6 +1,7 @@
 <script lang="ts">
     import {EditorView, basicSetup} from "codemirror";
     import {rust} from "@codemirror/lang-rust";
+    import {oneDark} from '@codemirror/theme-one-dark';
 
     export default {
         data() {
@@ -15,13 +16,12 @@
             }
 
             new EditorView ({
-                extensions: [basicSetup, rust()],
+                extensions: [basicSetup, rust(), oneDark],
                 parent
             });
         },
         methods: {
             async Run() {
-                let result = await this.Compile();
                 let output = document.querySelector('#code-output');
 
                 if (output === null) {
@@ -30,14 +30,19 @@
 
                 output.innerHTML = '';
 
-                let stderr = document.createElement('p');
-                let stdout = document.createElement('p');
+                let result = await this.Compile();
+
+                let stderr = document.createElement('pre');
+                let stdout = document.createElement('pre');
 
                 output.appendChild(stderr);
                 output.appendChild(stdout);
 
-                stderr.textContent = result.stderr;
-                stdout.textContent = result.stdout;
+                stderr.innerHTML = result.stderr;
+                stdout.innerHTML = result.stdout;
+
+                stderr.style.whiteSpace = 'pre-wrap';
+                stdout.style.whiteSpace = 'pre-wrap';
             },
             async Compile(): Promise<CompileResult> {
                 let parent = document.querySelector('#code-editor');
@@ -83,7 +88,9 @@
                 });
 
                 let body = await response.json() as CompileResult;
-                body.stderr = body.stderr.replace(/^ +/gm, ''); // Remove space at line start
+                if (body.success) {
+                    body.stderr = body.stderr.replace(/^ +/gm, ''); // Remove space at line start
+                }
                 return body;
             }
         }
@@ -98,14 +105,35 @@
 </script>
 
 <template>
-    <div id="code-editor">
-        
+    <div id="code-editor-container">
+        <div id="code-editor">
+            
+        </div>
+        <button id="code-run-btn" v-on:click="Run()">
+            Run
+        </button>
     </div>
-    <button v-on:click="Run()">
-        Run
-    </button>
 </template>
 
 <style>
-    
+    #code-editor-container {
+        grid-column: span 4;
+    }
+    #code-editor {
+        padding: 1rem;
+        background: #282c34;
+        border-radius: .5rem;
+    }
+    #code-run-btn {
+        padding: .5rem 2rem;
+        border-radius: .5rem;
+        background: rgb(32, 132, 178);
+        outline: none;
+        border: none;
+        cursor: pointer;
+        color: white;
+        font-size: 1rem;
+        font-weight: bolder;
+        margin-top: 1.5rem;
+    }
 </style>

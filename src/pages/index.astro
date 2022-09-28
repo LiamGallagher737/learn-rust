@@ -9,11 +9,34 @@ import CodeOutput from "../components/CodeOutput.astro";
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+		<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 		<title>Learn Rust</title>
 	</head>
 	<body>
 		<h1>Learn Rust</h1>
-		<CodeEditor client:load />
-		<CodeOutput />
+		<main>
+			<CodeEditor client:load />
+			<CodeOutput />
+		</main>
 	</body>
 </html>
+
+<style>
+	body {
+		background: #1A1627;
+		color: white;
+		font-family: 'Poppins', sans-serif;
+	}
+	main {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		gap: 2rem;
+		max-width: 95vw;
+		margin: auto;
+	}
+	@media only screen and (max-width: 1100px) {
+		main {
+			display: block;
+		}
+	}
+</style>
