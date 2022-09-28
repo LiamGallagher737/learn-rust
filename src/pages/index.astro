@@ -1,5 +1,6 @@
 ---
 import CodeEditor from "../components/CodeEditor.vue";
+import CodeOutput from "../components/CodeOutput.astro";
 ---
 
 <html lang="en">
@@ -8,10 +9,11 @@ import CodeEditor from "../components/CodeEditor.vue";
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Learn Rust</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<h1>Learn Rust</h1>
 		<CodeEditor client:load />
+		<CodeOutput />
 	</body>
 </html>
