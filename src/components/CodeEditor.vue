@@ -2,6 +2,7 @@
     import {EditorView, basicSetup} from "codemirror";
     import {rust} from "@codemirror/lang-rust";
     import {oneDark} from '@codemirror/theme-one-dark';
+import { EditorState } from "@codemirror/state";
 
     export default {
         data() {
@@ -15,10 +16,12 @@
                 throw new Error('Querying #code-editor returned null');
             }
 
-            new EditorView ({
+            let editor = new EditorView ({
                 extensions: [basicSetup, rust(), oneDark],
                 parent
             });
+
+            // editor.state.doc = new Text('fn main() {\n\t\n}');
         },
         methods: {
             async Run() {
@@ -30,7 +33,17 @@
 
                 output.innerHTML = '';
 
-                let result = await this.Compile();
+                let parent = document.querySelector('#code-editor');
+                if (parent === null) {
+                    throw new Error('Querying #code-editor returned null');
+                }
+
+                let editor = EditorView.findFromDOM(parent as HTMLElement);
+                if (editor === null) {
+                    throw new Error('Failed finding editor within #code-editor');
+                }
+
+                let result = await this.Compile(editor);
 
                 let stderr = document.createElement('pre');
                 let stdout = document.createElement('pre');
@@ -44,17 +57,7 @@
                 stderr.style.whiteSpace = 'pre-wrap';
                 stdout.style.whiteSpace = 'pre-wrap';
             },
-            async Compile(): Promise<CompileResult> {
-                let parent = document.querySelector('#code-editor');
-                if (parent === null) {
-                    throw new Error('Querying #code-editor returned null');
-                }
-
-                let editor = EditorView.findFromDOM(parent as HTMLElement);
-                if (editor === null) {
-                    throw new Error('Failed finding editor within #code-editor');
-                }
-
+            async Compile(editor: EditorView): Promise<CompileResult> {
                 let iter = editor.state.doc.iter();
                 let line = iter.next();
                 let code = '';

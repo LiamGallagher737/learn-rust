@@ -1,4 +1,6 @@
 ---
+import CodeInstructions from "../components/CodeInstructions.astro";
+import CodeInput from "../components/CodeInput.astro";
 import CodeEditor from "../components/CodeEditor.vue";
 import CodeOutput from "../components/CodeOutput.astro";
 ---
@@ -15,6 +17,8 @@ import CodeOutput from "../components/CodeOutput.astro";
 	<body>
 		<h1>Learn Rust</h1>
 		<main>
+			<CodeInstructions />
+			<CodeInput />
 			<CodeEditor client:load />
 			<CodeOutput />
 		</main>
