@@ -3,6 +3,7 @@
     import {rust} from "@codemirror/lang-rust";
     import {oneDark} from '@codemirror/theme-one-dark';
 import { EditorState } from "@codemirror/state";
+import { validate } from "@babel/types";
 
     export default {
         data() {
@@ -16,11 +17,13 @@ import { EditorState } from "@codemirror/state";
                 throw new Error('Querying #code-editor returned null');
             }
 
+            console.log("editor");
             let editor = new EditorView ({
                 extensions: [basicSetup, rust(), oneDark],
                 parent
             });
 
+            
             // editor.state.doc = new Text('fn main() {\n\t\n}');
         },
         methods: {
@@ -44,6 +47,7 @@ import { EditorState } from "@codemirror/state";
                 }
 
                 let result = await this.Compile(editor);
+                // let correct = this.Validate(result.stdout);
 
                 let stderr = document.createElement('pre');
                 let stdout = document.createElement('pre');
@@ -95,7 +99,15 @@ import { EditorState } from "@codemirror/state";
                     body.stderr = body.stderr.replace(/^ +/gm, ''); // Remove space at line start
                 }
                 return body;
-            }
+            },
+            // Validate(output: string): boolean {
+            //     let asnwersdoc = document.querySelectorAll('.answer');
+            //     let answers = asnwersdoc.forEach(answer => {
+            //         answer.innerHTML;
+            //     })
+            //     console.log(answers);
+            //     return false;
+            // }
         }
     }
 
@@ -109,12 +121,15 @@ import { EditorState } from "@codemirror/state";
 
 <template>
     <div id="code-editor-container">
+        <div id="code-editor-header">
+            <h2>Code</h2>
+            <button id="code-run-btn" v-on:click="Run()">
+                Run
+            </button>
+        </div>
         <div id="code-editor">
             
         </div>
-        <button id="code-run-btn" v-on:click="Run()">
-            Run
-        </button>
     </div>
 </template>
 
@@ -122,10 +137,8 @@ import { EditorState } from "@codemirror/state";
     #code-editor-container {
         grid-column: span 4;
     }
-    #code-editor {
-        padding: 1rem;
-        background: #282c34;
-        border-radius: .5rem;
+    #code-editor-header h2 {
+        float: left;
     }
     #code-run-btn {
         padding: .5rem 2rem;
@@ -137,6 +150,10 @@ import { EditorState } from "@codemirror/state";
         color: white;
         font-size: 1rem;
         font-weight: bolder;
-        margin-top: 1.5rem;
+        margin-top: 1.2rem;
+        float: right;
+    }
+    #code-editor {
+        padding-top: 5rem;
     }
 </style>

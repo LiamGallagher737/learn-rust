@@ -1,0 +1,21 @@
+---
+interface Props {
+    answers: string[];
+}
+const { answers } = Astro.props;
+---
+
+<h2>Instructions</h2>
+<slot />
+<br>
+<h3>Answers</h3>
+<ul id="answers">
+    {
+        answers.map(answer => (
+            <li class="answer">{answer}</li>
+        ))
+    }
+</ul>
+<style>
+    
+</style>

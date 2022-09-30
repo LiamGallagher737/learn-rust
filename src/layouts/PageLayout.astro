@@ -2,6 +2,13 @@
 import CodeInstructions from "../components/CodeInstructions.astro";
 import CodeEditor from "../components/CodeEditor.vue";
 import CodeOutput from "../components/CodeOutput.astro";
+
+interface Props {
+    title: string;
+    answers: string[];
+}
+
+const { title, answers } = Astro.props;
 ---
 
 <html lang="en">
@@ -11,13 +18,15 @@ import CodeOutput from "../components/CodeOutput.astro";
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-		<title>Learn Rust</title>
+		<title>{title} | Learn Rust</title>
 	</head>
 	<body>
 		<h1>Learn Rust</h1>
 		<main>
 			<div class="code-development-item" id="instructions">
-				<CodeInstructions />
+				<CodeInstructions answers={answers}>
+                    <slot />
+                </CodeInstructions>
 			</div>
 			<div class="code-development-item" id="editor">
 				<CodeEditor client:load />
