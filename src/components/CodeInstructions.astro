@@ -8,11 +8,11 @@ const { answers } = Astro.props;
 <h2>Instructions</h2>
 <slot />
 <br>
-<h3>Answers</h3>
+<h3>Requirements</h3>
 <ul id="answers">
     {
         answers.map(answer => (
-            <li class="answer">{answer}</li>
+            <li>Print "<span class="answer">{answer}</span>"</li>
         ))
     }
 </ul>

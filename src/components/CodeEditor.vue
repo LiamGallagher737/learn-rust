@@ -2,8 +2,6 @@
     import {EditorView, basicSetup} from "codemirror";
     import {rust} from "@codemirror/lang-rust";
     import {oneDark} from '@codemirror/theme-one-dark';
-import { EditorState } from "@codemirror/state";
-import { validate } from "@babel/types";
 
     export default {
         data() {
@@ -17,14 +15,10 @@ import { validate } from "@babel/types";
                 throw new Error('Querying #code-editor returned null');
             }
 
-            console.log("editor");
-            let editor = new EditorView ({
+            new EditorView ({
                 extensions: [basicSetup, rust(), oneDark],
                 parent
             });
-
-            
-            // editor.state.doc = new Text('fn main() {\n\t\n}');
         },
         methods: {
             async Run() {
@@ -47,7 +41,9 @@ import { validate } from "@babel/types";
                 }
 
                 let result = await this.Compile(editor);
-                // let correct = this.Validate(result.stdout);
+                let correct = this.Validate(result.stdout);
+
+                console.log(correct);
 
                 let stderr = document.createElement('pre');
                 let stdout = document.createElement('pre');
@@ -100,14 +96,21 @@ import { validate } from "@babel/types";
                 }
                 return body;
             },
-            // Validate(output: string): boolean {
-            //     let asnwersdoc = document.querySelectorAll('.answer');
-            //     let answers = asnwersdoc.forEach(answer => {
-            //         answer.innerHTML;
-            //     })
-            //     console.log(answers);
-            //     return false;
-            // }
+            Validate(output: string): boolean {
+                let answersdoc = document.querySelectorAll('.answer');
+                let answers: string[] = [];
+                answersdoc.forEach(answerdoc => {
+                    answers.push(answerdoc.innerHTML);
+                });
+                
+                for (let i = 0; i < answers.length; i++) {
+                    if (!output.includes(answers[i])) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
         }
     }
 
